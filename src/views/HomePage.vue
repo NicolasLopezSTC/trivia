@@ -1,4 +1,15 @@
-<script setup></script>
+<script setup>
+import { onMounted, ref } from 'vue';
+import useAPI from '@/composables/useAPI'
+
+const api = useAPI()
+const categories = ref([])
+onMounted(async () => {
+  categories.value = await api.getCategories()
+})
+
+</script>
+
 
 <template>
 <div class="brand">
@@ -7,9 +18,17 @@
   <img class="logo" src="logo.svg" alt="logo" />
 </div>
 <div class="categories">
-  <RouterLink :to="`/question/category/${n}`" v-for= "n in 24" :key="n" class="category">Category - {{ n }} 
+  <RouterLink    
+     v-for="category in categories"
+     :key="category.id"
+     :to="`/question/category/${category.id}`"
+     class="category"
+  >
+     {{ category.name }} 
+
   </RouterLink>
   </div>
+  
 </template>
 
 <style lang="postcss" scoped>
@@ -30,11 +49,12 @@
 @apply grid flex-grow grid-cols-4 gap-12;
 
 & .category {
-@apply flex h-32 w-40 items-center justify-center rounded-lg border-purple-500 py-4 font-bold uppercase text-slate-600 transition-colors duration-300;
+@apply text-center flex h-32  items-center justify-center rounded-lg border-purple-500 py-4 font-bold uppercase text-slate-600 transition-colors duration-300;
 
 &:hover {
   @apply cursor-pointer border-red-500 bg-red-500 text-white;
     }
   }
 }
-</style>
+
+</style>@/composables/useApi
